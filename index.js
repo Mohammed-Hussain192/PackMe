@@ -685,6 +685,6 @@ app.get('/track/:id',loginmiddelware, async (req, res) => {
   }
 });
 
-app.listen(4000,()=>{
-    console.log(4000)
-})
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`Server is running on port ${process.env.PORT || 5000}`);
+});
