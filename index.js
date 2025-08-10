@@ -18,7 +18,7 @@ const cartmodel = require('./models/cart')
 const order = require('./models/ordered')
 const updatePass = require('./controllers/updatepassword')
 
-const Product = require('./models/Product'); 
+const Product = require('./models/product'); 
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
