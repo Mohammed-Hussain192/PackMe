@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pack-Me- Premium Timepieces</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+  <style>
+    :root {
+      --primary: #1a1a2e;
+      --secondary: #16213e;
+      --accent: #0f3460;
+      --highlight: #e94560;
+      --text: #f1f1f1;
+      --text-secondary: #b8b8b8;
+      --card-bg: #16213e;
+      --nav-bg: rgba(26, 26, 46, 0.9);
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    [data-theme="light"] {
+      --primary: #f8f9fa;
+      --secondary: #e9ecef;
+      --accent: #dee2e6;
+      --highlight: #e94560;
+      --text: #212529;
+      --text-secondary: #495057;
+      --card-bg: #ffffff;
+      --nav-bg: rgba(248, 249, 250, 0.9);
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--primary);
+      color: var(--text);
+      transition: var(--transition);
+      min-height: 100vh;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--highlight);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--highlight);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .search-bar {
+      position: relative;
+      width: 250px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.6rem 1rem 0.6rem 2.5rem;
+      border-radius: 50px;
+      border: none;
+      background-color: var(--secondary);
+      color: var(--text);
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--highlight);
+    }
+
+    .search-bar i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      color: var(--highlight);
+      transform: rotate(30deg);
+    }
+
+    .cart-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .cart-btn:hover {
+      color: var(--highlight);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--highlight);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Container & Sections */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 7rem 2rem 3rem;
+    }
+
+    section {
+      margin-bottom: 6rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-bottom: 4rem;
+      overflow: hidden;
+      position: relative;
+      padding: 4rem 0;
+      border-radius: 15px;
+      background: linear-gradient(135deg, var(--accent), var(--secondary));
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://trendyaccessoriesstore.com/cdn/shop/products/77736cf851224713d0da8e99f5830925_1024x1024.jpg?v=1647543207') center/cover;
+      opacity: 0.2;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--highlight), #ff7b9c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Featured Brands Section */
+    .brands-section {
+      text-align: center;
+    }
+
+    .brands-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .brand-card {
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      transition: var(--transition);
+      min-width: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand-card img {
+      max-width: 100%;
+      height: 50px;
+      object-fit: contain;
+      filter: grayscale(100%) brightness(0.8);
+      transition: var(--transition);
+    }
+
+    .brand-card:hover img {
+      filter: grayscale(0) brightness(1);
+    }
+
+    /* Featured Watches Section */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      position: relative;
+      transform: translateY(50px);
+      opacity: 0;
+    }
+
+    .card.animated {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: var(--highlight);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 2;
+    }
+
+    .card-img-container {
+      height: 300px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .card:hover .card-img {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-brand {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Testimonials Section */
+    .testimonials-section {
+      text-align: center;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .testimonial-card {
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: left;
+      position: relative;
+      transform: translateY(50px);
+      opacity: 0;
+    }
+
+    .testimonial-card.animated {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      font-size: 5rem;
+      color: var(--highlight);
+      opacity: 0.2;
+      font-family: serif;
+      line-height: 1;
+    }
+
+    .testimonial-content {
+      margin-bottom: 1.5rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .author-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--highlight);
+    }
+
+    .author-info h4 {
+      margin-bottom: 0.3rem;
+      color: var(--text);
+    }
+
+    .author-info p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Newsletter Section */
+    .newsletter-section {
+      background: linear-gradient(135deg, var(--accent), var(--secondary));
+      padding: 4rem 2rem;
+      border-radius: 15px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .newsletter-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1533134242443-d4fd215305ad?q=80&w=1470&auto=format&fit=crop') center/cover;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    .newsletter-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .newsletter-form {
+      display: flex;
+      max-width: 500px;
+      margin: 2rem auto 0;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      border-radius: 50px 0 0 50px;
+      background-color: var(--card-bg);
+      color: var(--text);
+      font-family: inherit;
+    }
+
+    .newsletter-form input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--highlight);
+    }
+
+    .newsletter-form button {
+      padding: 0 2rem;
+      border: none;
+      border-radius: 0 50px 50px 0;
+      background-color: var(--highlight);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .newsletter-form button:hover {
+      background-color: #d13a54;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--secondary);
+      padding: 4rem 0 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-column h3 {
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-column h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background-color: var(--highlight);
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--highlight);
+      padding-left: 5px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      color: var(--text);
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      background-color: var(--highlight);
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Common Elements */
+    .price {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--highlight);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.2rem;
+      background-color: var(--highlight);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--highlight);
+      color: var(--highlight);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--highlight);
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+    }
+
+    .btn i {
+      font-size: 0.9rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background-color: var(--highlight);
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 3rem;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .nav-links {
+        gap: 1rem;
+      }
+      
+      .search-bar {
+        width: 200px;
+      }
+      
+      .hero h1 {
+        font-size: 3rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .search-bar {
+        display: none;
+      }
+      
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .grid, .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .newsletter-form {
+        flex-direction: column;
+      }
+      
+      .newsletter-form input {
+        border-radius: 50px;
+        margin-bottom: 1rem;
+      }
+      
+      .newsletter-form button {
+        border-radius: 50px;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#" class="logo">
+      <i class="fas fa-bag-shopping"></i>
+      <span>Pack-Me</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="/home">Home</a>
+      <a href="/collections">Collections</a>
+      <a href="/brands">Brands</a>
+      <a href="/Profile">Profile</a>
+      <a href="/cart">Cart</a>
+      
+    </div>
+    
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="cart-btn">
+        <a href="/cart"></a>
+        <span class="cart"></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Precision Crafted Timepieces</h1>
+        <p>Discover our exclusive collection of luxury Bags that blend timeless elegance with modern innovation.</p>
+        <a href="#collections" class="btn">Explore Collections <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </section>
+
+    <!-- Featured Brands Section -->
+    
+
+    <!-- Featured Watches Section -->
+    <section id="collections">
+      <h2 class="section-title">Featured Bags</h2>
+      <p class="section-subtitle">Curated selection of our most sought-after timepieces</p>
+      <div class="grid" id="productGrid">
+        <% products.forEach(product => { %>
+          <a style="text-decoration: none;" href="/product/<%= product.id %>">
+          <div class="card">
+            <% if(product.discount) { %>
+              <span class="card-badge">-<%= product.discount %>%</span>
+            <% } %>
+            <div class="card-img-container">
+              <img src="<%= product.images[0] %>" alt="<%= product.name %>" class="card-img">
+            </div>
+            <div class="card-body">
+              <p class="card-brand"><%= product.brand %></p>
+              <h3 class="card-title"><%= product.name %></h3>
+              
+              <div class="card-footer">
+                <span class="price">₹<%= product.price.toLocaleString() %></span>
+                
+              </div>
+            </div>
+          </div>
+          </a>
+        <% }) %>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section" id="testimonials">
+      <h2 class="section-title">Client Testimonials</h2>
+      <p class="section-subtitle">What our customers say about their ChronoVault experience</p>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p>The attention to detail and customer service at ChronoVault is unmatched. My Patek Philippe arrived in perfect condition and keeps impeccable time.</p>
+          </div>
+          <div class="testimonial-author">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajesh Kumar" class="author-avatar">
+            <div class="author-info">
+              <h4>Rajesh Kumar</h4>
+              <p>Delhi, India</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p>I've purchased three watches from ChronoVault over the years and each transaction has been flawless. Their authentication process gives me complete peace of mind.</p>
+          </div>
+          <div class="testimonial-author">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Priya Sharma" class="author-avatar">
+            <div class="author-info">
+              <h4>Priya Sharma</h4>
+              <p>Mumbai, India</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p>As a collector, I appreciate ChronoVault's vast selection of rare pieces. Their team helped me acquire a discontinued Rolex model I'd been searching for years.</p>
+          </div>
+          <div class="testimonial-author">
+            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Amit Patel" class="author-avatar">
+            <div class="author-info">
+              <h4>Amit Patel</h4>
+              <p>Bangalore, India</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+      <div class="newsletter-content">
+        <h2 class="section-title">Join Our Newsletter</h2>
+        <p class="section-subtitle">Subscribe to receive exclusive offers, new arrivals, and watch collecting tips</p>
+        <form class="newsletter-form">
+          <input type="email" placeholder="Your email address" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3>Pack-Me</h3>
+          <p>Your premier destination for luxury timepieces since 2010. We specialize in authentic, high-end watches from the world's finest brands.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#collections">Collections</a></li>
+            <li><a href="#brands">Brands</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Customer Service</h3>
+          <ul class="footer-links">
+            <li><a href="#">My Account</a></li>
+            <li><a href="#">Order Tracking</a></li>
+            <li><a href="#">Warranty</a></li>
+            <li><a href="#">Returns & Exchanges</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+        <div class="footer-column" id="contact">
+          <h3>Contact Us</h3>
+          <ul class="footer-links">
+            <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Lane, Mumbai, India</li>
+            <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+            <li><i class="fas fa-envelope"></i> info@chronovault.com</li>
+            <li><i class="fas fa-clock"></i> Mon-Sat: 10AM - 8PM</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 ChronoVault. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    let darkMode = true;
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'light') {
+      setLightMode();
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (darkMode) {
+        setLightMode();
+      } else {
+        setDarkMode();
+      }
+    });
+
+    function setLightMode() {
+      body.setAttribute('data-theme', 'light');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      darkMode = false;
+      localStorage.setItem('theme', 'light');
+    }
+
+    function setDarkMode() {
+      body.removeAttribute('data-theme');
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      darkMode = true;
+      localStorage.setItem('theme', 'dark');
+    }
+
+    // Hero animation
+    gsap.from('.hero h1', {
+      y: 50,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out',
+      delay: 0.4
+    });
+
+    gsap.from('.hero p', {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: 0.6
+    });
+
+    gsap.from('.hero .btn', {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: 0.8
+    });
+
+    // Brands animation
+    gsap.from('.brand-card', {
+      scrollTrigger: {
+        trigger: '.brands-section',
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      stagger: 0.1
+    });
+
+    // Card animations
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+      gsap.to(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        },
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: index * 0.1
+      });
+      
+      setTimeout(() => {
+        card.classList.add('animated');
+      }, 500 + (index * 100));
+      
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+          y: -10,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          y: 0,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+    });
+
+    // Testimonial animations
+    const testimonials = document.querySelectorAll('.testimonial-card');
+    testimonials.forEach((testimonial, index) => {
+      gsap.to(testimonial, {
+        scrollTrigger: {
+          trigger: testimonial,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        },
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: index * 0.15
+      });
+      
+      setTimeout(() => {
+        testimonial.classList.add('animated');
+      }, 500 + (index * 150));
+    });
+
+    // Newsletter animation
+    gsap.from('.newsletter-section h2', {
+      scrollTrigger: {
+        trigger: '.newsletter-section',
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      },
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    });
+
+    gsap.from('.newsletter-section p', {
+      scrollTrigger: {
+        trigger: '.newsletter-section',
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      },
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: 0.2
+    });
+
+    gsap.from('.newsletter-form', {
+      scrollTrigger: {
+        trigger: '.newsletter-section',
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      },
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: 0.4
+    });
+
+    // Initialize GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+  </script>
+</body>
+</html>

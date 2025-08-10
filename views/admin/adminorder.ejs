@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Orders Panel - Chrono Vault</title>
+  <style>
+    /* Keep your existing styles here, or add minimal styles */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg, #f4f4f4);
+      color: var(--text-color, #222);
+      padding: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    form {
+      margin: 0;
+    }
+    select {
+      padding: 0.4rem;
+      font-size: 1rem;
+    }
+    button {
+      margin-left: 0.5rem;
+      padding: 0.4rem 1rem;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0b5ed7;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Orders Panel</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Customer Name</th>
+        <th>Customer Email</th>
+        <th>Status</th>
+        <th>Update Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if(orders.length==0){ %>
+        <p>No orders yet</p>
+      <%}%>
+      <% orders.forEach(order => { %>
+        <tr>
+          <td><%= order._id %></td>
+          <td><%= order.name %></td>
+          <td><%= order.email %></td>
+          <td><%= order.status %></td>
+          <td>
+            <form action="/admin/update-status/<%= order._id %>" method="POST">
+              <select name="status" required>
+                <option disabled selected>Change Status</option>
+                <option value="Processing">Processing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Out for Delivery">Out for Delivery</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <button type="submit">Update</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

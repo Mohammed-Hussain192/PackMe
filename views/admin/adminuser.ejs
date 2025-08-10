@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Panel - Chrono Vault</title>
+  <style>
+    :root {
+      --bg: #f4f4f4;
+      --text-color: #222;
+      --card-bg: white;
+      --nav-bg: #0d6efd;
+      --nav-text: white;
+    }
+
+    body.dark-mode {
+      --bg: #121212;
+      --text-color: #f0f0f0;
+      --card-bg: #1e1e1e;
+      --nav-bg: #1f1f1f;
+      --nav-text: #f0f0f0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: var(--nav-bg);
+      color: var(--nav-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toggle-switch input[type="checkbox"] {
+      width: 40px;
+      height: 20px;
+    }
+
+    main {
+      padding: 2rem;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead {
+        display: none;
+      }
+      tr {
+        margin-bottom: 1rem;
+      }
+      td {
+        padding: 0.5rem;
+        border: none;
+        border-bottom: 1px solid #ccc;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <h2>Pack-Me Admin</h2>
+    <div class="toggle-switch">
+      <label for="theme-toggle">Dark Mode</label>
+      <input type="checkbox" id="theme-toggle" />
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h1>User Panel</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% user.forEach(u => { %>
+          <tr>
+            <td data-label="User ID"><%= u._id %></td>
+            <td data-label="Name"><%= u.fullname || 'N/A' %></td>
+            <td data-label="Email"><%= u.email %></td>
+            <td data-label="Phone"><%= u.phone || 'N/A' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    const toggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Load from localStorage
+    if (localStorage.getItem("theme") === "dark") {
+      body.classList.add("dark-mode");
+      toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+      body.classList.toggle('dark-mode');
+      localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+    });
+  </script>
+</body>
+</html>

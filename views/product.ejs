@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= product.name %> | Pack-Me</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <style>
+    :root {
+      --primary: #1a1a2e;
+      --secondary: #16213e;
+      --accent: #0f3460;
+      --highlight: #e94560;
+      --text: #f1f1f1;
+      --text-secondary: #b8b8b8;
+      --card-bg: #16213e;
+      --nav-bg: rgba(26, 26, 46, 0.9);
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    [data-theme="light"] {
+      --primary: #f8f9fa;
+      --secondary: #e9ecef;
+      --accent: #dee2e6;
+      --highlight: #e94560;
+      --text: #212529;
+      --text-secondary: #495057;
+      --card-bg: #ffffff;
+      --nav-bg: rgba(248, 249, 250, 0.9);
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--primary);
+      color: var(--text);
+      transition: var(--transition);
+      min-height: 100vh;
+    }
+
+    /* Navbar Styles (from first template) */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--highlight);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--highlight);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      color: var(--highlight);
+      transform: rotate(30deg);
+    }
+
+    .cart-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .cart-btn:hover {
+      color: var(--highlight);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--highlight);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Container & Product Page Styles */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 7rem 2rem 3rem;
+    }
+
+    .product-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .product-images {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .main-image {
+      margin-bottom: 1.5rem;
+    }
+
+    .main-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .main-image img:hover {
+      transform: scale(1.02);
+    }
+
+    .image-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+
+    .image-gallery img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid var(--accent);
+    }
+
+    .image-gallery img:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow);
+      border-color: var(--highlight);
+    }
+
+    .product-info {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .product-title {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .product-brand {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .product-price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--highlight);
+      margin: 1.5rem 0;
+    }
+
+    .product-description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .product-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .meta-item {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .meta-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.3rem;
+    }
+
+    .meta-value {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background-color: var(--highlight);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--highlight);
+      color: var(--highlight);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--highlight);
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+    }
+
+    .btn i {
+      font-size: 0.9rem;
+    }
+
+    /* Reviews Section */
+    .reviews-section {
+      margin-top: 4rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background-color: var(--highlight);
+    }
+
+    .review-form {
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 3rem;
+      box-shadow: var(--shadow);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+      background-color: var(--secondary);
+      color: var(--text);
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--highlight);
+      box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.3);
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .review-list {
+      list-style: none;
+    }
+
+    .review-item {
+      background-color: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border-left: 3px solid var(--highlight);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .review-author {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .review-rating {
+      color: var(--highlight);
+      font-weight: 700;
+    }
+
+    .review-content {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .no-reviews {
+      color: var(--text-secondary);
+      font-style: italic;
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--card-bg);
+      border-radius: 15px;
+    }
+
+    /* Success Message */
+    .suc {
+      height: 50px;
+      width: 30%;
+      resize: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgb(246, 52, 42);
+      color: white;
+      left: 35%;
+      bottom: 90%;
+      position: absolute;
+      z-index: 1220;
+      font-size: 1vw;
+      border-radius: 0px 0px 10px 10px;
+      border: 1px solid rgb(255, 255, 255);
+      text-transform: capitalize;
+      font-weight: 400;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .container {
+        padding: 6rem 1.5rem 2rem;
+      }
+      
+      .product-header {
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .product-title {
+        font-size: 1.8rem;
+      }
+      
+      .product-price {
+        font-size: 1.8rem;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .suc {
+        width: 80%;
+        left: 10%;
+        font-size: 3vw;
+      }
+    }
+  </style>
+</head>
+<body>
+   <% if(suc.length>0) { %>
+     <p class="suc"><%= suc%></p>
+   <% } %>
+    
+      <% if(err.length>0) { %>
+     <p class="suc"><%= err%></p>
+   <% } %>
+  <nav class="navbar">
+    <a href="/home" class="logo">
+      <i class="fas fa-bag-shopping"></i>
+      <span>Pack-Me</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="/home">Home</a>
+      <a href="/collections">Collections</a>
+      <a href="/brands">Brands</a>
+      <a href="/profile">Profile</a>
+      <a href="/cart">Cart</a>
+    </div>
+    
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+      
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="product-header">
+      <div class="product-images">
+        <div class="main-image">
+          <img src="<%= product.images[0] %>" alt="<%= product.name %>" />
+        </div>
+        <% if (product.images.length > 1) { %>
+          <div class="image-gallery">
+            <% product.images.slice(1).forEach(img => { %>
+              <img src="<%= img %>" alt="Product Image" />
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+      
+      <div class="product-info">
+        <h1 class="product-title"><%= product.name %></h1>
+        <p class="product-brand"><%= product.brand %></p>
+        
+        <p class="product-description"><%= product.description %></p>
+        
+        <div class="product-price">₹<%= product.price.toLocaleString() %></div>
+        
+        <div class="product-meta">
+          <div class="meta-item">
+            <div class="meta-label">Availability</div>
+            <div class="meta-value">In Stock</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Reference</div>
+            <div class="meta-value">CV-<%= product.id %></div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Movement</div>
+            <div class="meta-value">Automatic</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Case Size</div>
+            <div class="meta-value">42mm</div>
+          </div>
+        </div>
+        
+        <div class="action-buttons">
+          <a href="/addtocart/<%= product.id %>" class="btn">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </a>
+          <a href="/buynow/<%= product.id %>" class="btn btn-outline">
+            <i class="fas fa-bolt"></i> Buy Now
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="reviews-section">
+      <h2 class="section-title">Customer Reviews</h2>
+      
+      <div class="review-form">
+        <h3>Write a Review</h3>
+        <form action="/product/<%= product.id %>/review" method="POST">
+          <div class="form-group">
+            <label for="customer" class="form-label">Your Name</label>
+            <input type="text" id="customer" name="customer" class="form-control" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="rating" class="form-label">Rating</label>
+            <select id="rating" name="rating" class="form-control" required>
+              <option value="">Select rating</option>
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Very Good</option>
+              <option value="3">3 - Good</option>
+              <option value="2">2 - Fair</option>
+              <option value="1">1 - Poor</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="comment" class="form-label">Your Review</label>
+            <textarea id="comment" name="comment" class="form-control" required></textarea>
+          </div>
+          
+          <button type="submit" class="btn">
+            <i class="fas fa-paper-plane"></i> Submit Review
+          </button>
+        </form>
+      </div>
+      
+      <% if (product.reviews.length > 0) { %>
+        <ul class="review-list">
+          <% product.reviews.forEach(review => { %>
+            <li class="review-item">
+              <div class="review-header">
+                <span class="review-author"><%= review.customer %></span>
+                <span class="review-rating"><%= review.rating %>/5</span>
+              </div>
+              <p class="review-content">"<%= review.comment %>"</p>
+            </li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <div class="no-reviews">No reviews yet. Be the first to review this product!</div>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    let darkMode = true;
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'light') {
+      setLightMode();
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (darkMode) {
+        setLightMode();
+      } else {
+        setDarkMode();
+      }
+    });
+
+    function setLightMode() {
+      body.setAttribute('data-theme', 'light');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      darkMode = false;
+      localStorage.setItem('theme', 'light');
+    }
+
+    function setDarkMode() {
+      body.removeAttribute('data-theme');
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      darkMode = true;
+      localStorage.setItem('theme', 'dark');
+    }
+
+    // Image gallery interaction
+    const galleryImages = document.querySelectorAll('.image-gallery img');
+    const mainImage = document.querySelector('.main-image img');
+    
+    galleryImages.forEach(img => {
+      img.addEventListener('click', () => {
+        mainImage.src = img.src;
+        
+        // Add animation to main image
+        gsap.fromTo(mainImage, 
+          { opacity: 0.5, scale: 0.95 },
+          { opacity: 1, scale: 1, duration: 0.3 }
+        );
+      });
+    });
+
+    // Success message animation
+    <% if(suc.length>0) { %>
+      gsap.to(".suc", {
+        y: 0,
+        duration: 0.5,
+        ease: "power2.out"
+      });
+      
+      gsap.to(".suc", {
+        y: -100,
+        opacity: 0,
+        duration: 0.5,
+        delay: 3,
+        ease: "power2.in"
+      });
+    <% } %>
+
+      <% if(err.length>0) { %>
+      gsap.to(".suc", {
+        y: 0,
+        duration: 0.5,
+        ease: "power2.out"
+      });
+      
+      gsap.to(".suc", {
+        y: -100,
+        opacity: 0,
+        duration: 0.5,
+        delay: 3,
+        ease: "power2.in"
+      });
+    <% } %>
+
+    // Product image hover effect
+    gsap.to(".main-image img", {
+      scrollTrigger: {
+        trigger: ".main-image img",
+        start: "top 80%",
+        toggleActions: "play none none none"
+      },
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power2.out"
+    });
+
+    // Product info animation
+    gsap.from(".product-info > *", {
+      scrollTrigger: {
+        trigger: ".product-info",
+        start: "top 70%",
+        toggleActions: "play none none none"
+      },
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: "power2.out"
+    });
+  </script>
+</body>
+</html>

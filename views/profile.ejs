@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile |Pack-Me</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <style>
+    :root {
+      --primary: #1a1a2e;
+      --secondary: #16213e;
+      --accent: #0f3460;
+      --highlight: #e94560;
+      --text: #f1f1f1;
+      --text-secondary: #b8b8b8;
+      --card-bg: #16213e;
+      --nav-bg: rgba(26, 26, 46, 0.9);
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --border: rgba(233, 69, 96, 0.2);
+    }
+
+    [data-theme="light"] {
+      --primary: #f8f9fa;
+      --secondary: #e9ecef;
+      --accent: #dee2e6;
+      --highlight: #e94560;
+      --text: #212529;
+      --text-secondary: #495057;
+      --card-bg: #ffffff;
+      --nav-bg: rgba(248, 249, 250, 0.9);
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --border: rgba(233, 69, 96, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--primary);
+      color: var(--text);
+      transition: var(--transition);
+      min-height: 100vh;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--highlight);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--highlight);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      color: var(--highlight);
+      transform: rotate(30deg);
+    }
+
+    .cart-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .cart-btn:hover {
+      color: var(--highlight);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--highlight);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Container & Profile Page Styles */
+    .container {
+      max-width: 1000px;
+      margin: 7rem auto 3rem;
+      padding: 2rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background-color: var(--highlight);
+    }
+
+    .profile-card {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--accent);
+    }
+
+    .info-label {
+      font-weight: 600;
+      min-width: 120px;
+      color: var(--highlight);
+    }
+
+    .info-value {
+      flex: 1;
+    }
+
+    .quick-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .quick-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background-color: var(--highlight);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .quick-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+    }
+
+    .quick-link i {
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .container {
+        padding: 6rem 1.5rem 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .quick-links {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/home" class="logo">
+      <i class="fas fa-bag-shopping"></i>
+      <span>Pack-Me</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="/home">Home</a>
+      <a href="/collections">Collections</a>
+      <a href="/myorders">My Orders</a>
+      <a href="/profile">Profile</a>
+    </div>
+    
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="cart-btn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2 class="section-title">Profile Details</h2>
+    
+    <div class="profile-card">
+      <div class="profile-info">
+        <div class="info-row">
+          <span class="info-label">Full Name:</span>
+          <span class="info-value"><%= user.fullname %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email:</span>
+          <span class="info-value"><%= user.email %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Phone:</span>
+          <span class="info-value"><%= user.phone %></span>
+        </div>
+      </div>
+      
+      <div class="quick-links">
+        <a href="/myorders" class="quick-link">
+          <i class="fas fa-box-open"></i> My Orders
+        </a>
+        <a href="/cart" class="quick-link">
+          <i class="fas fa-shopping-cart"></i> My Cart
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    let darkMode = true;
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'light') {
+      setLightMode();
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (darkMode) {
+        setLightMode();
+      } else {
+        setDarkMode();
+      }
+    });
+
+    function setLightMode() {
+      body.setAttribute('data-theme', 'light');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      darkMode = false;
+      localStorage.setItem('theme', 'light');
+    }
+
+    function setDarkMode() {
+      body.removeAttribute('data-theme');
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      darkMode = true;
+      localStorage.setItem('theme', 'dark');
+    }
+
+    // Animation for profile card
+    gsap.from(".profile-card", {
+      scrollTrigger: {
+        trigger: ".profile-card",
+        start: "top 80%",
+        toggleActions: "play none none none"
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: "back.out(1)"
+    });
+
+    // Hover effect for quick links
+    document.querySelectorAll('.quick-link').forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        gsap.to(link, {
+          y: -3,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+      
+      link.addEventListener('mouseleave', () => {
+        gsap.to(link, {
+          y: 0,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+    });
+  </script>
+</body>
+</html>

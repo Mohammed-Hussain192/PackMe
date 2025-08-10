@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pack-Me - Login/Signup</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background-color 0.5s ease, color 0.3s ease;
+}
+
+body {
+    background-color: #0a0e17;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body.light-mode {
+    background-color: #f5f7fa;
+    color: #333333;
+}
+
+/* Navbar Styles */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(10, 14, 23, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    transform: translateY(-100%);
+}
+
+body.light-mode .navbar {
+    background-color: rgba(245, 247, 250, 0.8);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: #4fc3f7;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+body.light-mode .logo {
+    color: #2a7de1;
+}
+
+.logo i {
+    margin-right: 10px;
+    color: #4fc3f7;
+}
+
+body.light-mode .logo i {
+    color: #2a7de1;
+}
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.toggle-icon {
+    font-size: 20px;
+    margin-right: 8px;
+    color: #4fc3f7;
+}
+
+body.light-mode .toggle-icon {
+    color: #2a7de1;
+}
+
+.toggle-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 20px 20px;
+}
+
+/* Auth Container */
+.auth-container {
+    background-color: #1e293b;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+body.light-mode .auth-container {
+    background-color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode a {
+    color: #fffdfd;
+
+}
+
+.auth-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #4fc3f7;
+}
+
+body.light-mode .auth-title {
+    color: #2a7de1;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.auth-form label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.light-mode .auth-form label {
+    color: rgba(51, 51, 51, 0.8);
+}
+
+.auth-form input {
+    padding: 12px 15px;
+    border: 1px solid #334155;
+    border-radius: 5px;
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+body.light-mode .auth-form input {
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #ddd;
+}
+
+.auth-form input:focus {
+    outline: none;
+    border-color: #4fc3f7;
+}
+
+body.light-mode .auth-form input:focus {
+    border-color: #2a7de1;
+}
+
+.auth-form button {
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4fc3f7;
+    color: #0a0e17;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+body.light-mode .auth-form button {
+    background-color: #2a7de1;
+    color: #ffffff;
+}
+
+.auth-form button:hover {
+    background-color: #3ab4e6;
+}
+
+body.light-mode .auth-form button:hover {
+    background-color: #1a6bc7;
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.auth-switch a {
+    color: #4fc3f7;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+body.light-mode .auth-switch a {
+    color: #2a7de1;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* Forgot Password Link */
+.forgot-password {
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 5px;
+}
+
+.suc {
+
+    height: 50px;
+    width: 30%;
+    resize: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(246, 52, 42);
+    color: white;
+
+    left: 35%;
+    bottom: 90%;
+    position: absolute;
+    z-index: 1220;
+    font-size: 1vw;
+    border-radius: 0px 0px 10px 10px;
+    border: 1px solid rgb(255, 255, 255);
+    text-transform: capitalize;
+    font-weight: 400;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 30px 20px;
+    }
+
+    .navbar {
+        padding: 15px 5%;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 25px 15px;
+    }
+
+    .auth-title {
+        font-size: 22px;
+    }
+
+    .auth-form input {
+        padding: 10px 12px;
+    }
+}
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+</head>
+
+<body>
+    <% if(suc.length>0) { %>
+        <p class="suc">
+            <%= suc%>
+        </p>
+        <% } %>
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-chart-luine"></i>Pack-Me
+                </a>
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon toggle-icon"></i>
+                    <span class="toggle-text">Dark Mode</span>
+                </div>
+            </nav>
+
+            <main class="main-content">
+                <div class="auth-container" id="loginContainer">
+                    <h2 class="auth-title">Reset Your Password</h2>
+                    <form  class="auth-form" id="loginForm" action="/otp/data/udate" method="get">
+                        <div class="form-group">
+                            <label for="loginEmail"></label>
+                         
+                            <input type="hidden" name="email" id="" value="<%=email %>">
+                            <input type="password" class="uotp" name="updatepassword" minlength="8" id="loginEmail"
+                                placeholder="Update Your Password" required>
+                        </div>
+                      
+                        <p class="err"></p>
+                        <button type="submit">Reset password</button>
+                        
+                    </form>
+                </div>
+
+                
+            </main>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+            <script>
+               
+                // Theme Toggle Functionality
+                const themeToggle = document.getElementById('themeToggle');
+                const toggleIcon = themeToggle.querySelector('.toggle-icon');
+                const toggleText = themeToggle.querySelector('.toggle-text');
+
+                // Check for saved theme preference or use preferred color scheme
+                const currentTheme = localStorage.getItem('theme') ||
+                    (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+
+                if (currentTheme === 'light') {
+                    document.body.classList.add('light-mode');
+                    toggleIcon.classList.replace('fa-moon', 'fa-sun');
+                    toggleText.textContent = 'Light Mode';
+                }
+
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('light-mode');
+                    const isLightMode = document.body.classList.contains('light-mode');
+
+                    if (isLightMode) {
+                        toggleIcon.classList.replace('fa-moon', 'fa-sun');
+                        toggleText.textContent = 'Light Mode';
+                        localStorage.setItem('theme', 'light');
+                    } else {
+                        toggleIcon.classList.replace('fa-sun', 'fa-moon');
+                        toggleText.textContent = 'Dark Mode';
+                        localStorage.setItem('theme', 'dark');
+                    }
+                });
+
+
+
+
+             
+
+                // Form Submission Handling
+
+
+                // Animation on page load
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Navbar animation
+                    gsap.to('.navbar', {
+                        y: 0,
+                        duration: 0.8,
+                        ease: 'power3.out'
+                    });
+
+                    // Theme toggle animation
+                    gsap.to('.theme-toggle', {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: 0.2,
+                        ease: 'power3.out'
+                    });
+
+                    // Show login form by default with animation
+                    const loginContainer = document.getElementById('loginContainer');
+                    loginContainer.style.display = 'block';
+                    gsap.to(loginContainer, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: 0.4,
+                        ease: 'power3.out'
+                    });
+                });
+                gsap.to(".suc", {
+                    y: -1000,
+                    duration: 1,
+
+
+
+
+                    delay: 3
+                })
+                gsap.from(".suc", {
+                    y: -1000,
+                    duration: 1,
+
+
+
+
+                    delay: 0.3
+                })
+            </script>
+</body>
+
+</html>

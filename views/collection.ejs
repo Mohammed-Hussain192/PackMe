@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pack-Me - Collections</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+  <style>
+    :root {
+      --primary: #1a1a2e;
+      --secondary: #16213e;
+      --accent: #0f3460;
+      --highlight: #e94560;
+      --text: #f1f1f1;
+      --text-secondary: #b8b8b8;
+      --card-bg: #16213e;
+      --nav-bg: rgba(26, 26, 46, 0.9);
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    [data-theme="light"] {
+      --primary: #f8f9fa;
+      --secondary: #e9ecef;
+      --accent: #dee2e6;
+      --highlight: #e94560;
+      --text: #212529;
+      --text-secondary: #495057;
+      --card-bg: #ffffff;
+      --nav-bg: rgba(248, 249, 250, 0.9);
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--primary);
+      color: var(--text);
+      transition: var(--transition);
+      min-height: 100vh;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--highlight);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .nav-links a.active {
+      color: var(--highlight);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--highlight);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .search-bar {
+      position: relative;
+      width: 250px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.6rem 1rem 0.6rem 2.5rem;
+      border-radius: 50px;
+      border: none;
+      background-color: var(--secondary);
+      color: var(--text);
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--highlight);
+    }
+
+    .search-bar i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      color: var(--highlight);
+      transform: rotate(30deg);
+    }
+
+    .cart-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .cart-btn:hover {
+      color: var(--highlight);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--highlight);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Container & Sections */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 7rem 2rem 3rem;
+    }
+
+    /* Collections Header */
+    .collections-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    .collections-header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--highlight), #ff7b9c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .collections-header p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Filter Controls */
+    .filter-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .filter-select {
+      padding: 0.6rem 1rem;
+      border-radius: 50px;
+      border: none;
+      background-color: var(--secondary);
+      color: var(--text);
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    .filter-select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--highlight);
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .view-btn {
+      background-color: var(--secondary);
+      border: none;
+      color: var(--text-secondary);
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .view-btn.active {
+      background-color: var(--highlight);
+      color: white;
+    }
+
+    .view-btn:hover {
+      color: var(--text);
+    }
+
+    /* Collections Grid */
+    .collections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .collection-card {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      position: relative;
+      transform: translateY(50px);
+      opacity: 0;
+    }
+
+    .collection-card.animated {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .collection-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .collection-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: var(--highlight);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 2;
+    }
+
+    .collection-img-container {
+      height: 300px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .collection-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .collection-card:hover .collection-img {
+      transform: scale(1.05);
+    }
+
+    .collection-body {
+      padding: 1.5rem;
+    }
+
+    .collection-brand {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .collection-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .collection-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .collection-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Price Styles */
+    .price {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--highlight);
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+    }
+
+    /* Button Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.2rem;
+      background-color: var(--highlight);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--highlight);
+      color: var(--highlight);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--highlight);
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+    }
+
+    .btn i {
+      font-size: 0.9rem;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 3rem;
+    }
+
+    .page-link {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background-color: var(--secondary);
+      color: var(--text);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .page-link:hover,
+    .page-link.active {
+      background-color: var(--highlight);
+      color: white;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .nav-links {
+        gap: 1rem;
+      }
+      
+      .search-bar {
+        width: 200px;
+      }
+      
+      .collections-header h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .search-bar {
+        display: none;
+      }
+      
+      .filter-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .collections-header h1 {
+        font-size: 2rem;
+      }
+      
+      .collections-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="logo">
+      <i class="fas fa-bag-shopping"></i>
+      <span>Pack-Me</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="/home">Home</a>
+      <a href="/collections" class="active">Collections</a>
+      <a href="/brands">Brands</a>
+      <a href="/cart">Cart</a>
+      <a href="/profile">Profile</a>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search collections...">
+      </div>
+    </div>
+    
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+     
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Collections Header -->
+    <div class="collections-header">
+      <h1>Our Timepiece Collections</h1>
+      <p>Explore our curated selection of premium Bags from the world's most renowned brands. Each piece is authenticated and comes with our guarantee of quality.</p>
+    </div>
+
+    <!-- Filter Controls -->
+    <div class="filter-controls">
+      <div class="filter-group">
+        <span class="filter-label">Filter by:</span>
+        <select class="filter-select">
+          <option>All Brands</option>
+          <option>safari</option>
+          <option>American Tourister</option>
+          <option>PUMA</option>
+          <option>GEAR</option>
+          <option>Sonata</option>
+        </select>
+       
+        <select class="filter-select">
+          <option>Price Range</option>
+          <option>Under ₹10,000</option>
+          <option>₹10,000 - ₹50,000</option>
+          <option>₹50,000 - ₹1,00,000</option>
+          <option>Over ₹1,00,000</option>
+        </select>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn active" title="Grid View">
+          <i class="fas fa-th"></i>
+        </button>
+        <button class="view-btn" title="List View">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Collections Grid -->
+    <div class="collections-grid" id="collectionsGrid">
+      <!-- Titan Collection -->
+      <% titan.forEach(product => { %>
+        <a style="text-decoration: none;" href="/product/<%= product.id %>">
+        <div class="collection-card">
+          <% if(product.discount) { %>
+            <span class="collection-badge">-<%= product.discount %>%</span>
+          <% } %>
+          <div class="collection-img-container">
+            <img src="<%= product.images[0] %>" alt="<%= product.name %>" class="collection-img">
+          </div>
+          <div class="collection-body">
+           
+            <h3 class="collection-title"><%= product.name %></h3>
+            
+            <div class="collection-footer">
+              <div>
+                <span class="price">₹<%= product.price.toLocaleString() %></span>
+                <% if(product.originalPrice) { %>
+                  <span class="old-price">₹<%= product.originalPrice.toLocaleString() %></span>
+                <% } %>
+              </div>
+              
+            </div>
+          </div>
+          
+        </div>
+        </a>
+      <% }) %>
+
+      <!-- Fastrack Collection -->
+      <% Fasttrack.forEach(product => { %>
+        <a style="text-decoration: none;" href="/product/<%= product.id %>">
+        <div class="collection-card">
+          <% if(product.discount) { %>
+            <span class="collection-badge">-<%= product.discount %>%</span>
+          <% } %>
+          <div class="collection-img-container">
+            <img src="<%= product.images[0] %>" alt="<%= product.name %>" class="collection-img">
+          </div>
+          <div class="collection-body">
+            
+            <h3 class="collection-title"><%= product.name %></h3>
+           
+            <div class="collection-footer">
+              <div>
+                <span class="price">₹<%= product.price.toLocaleString() %></span>
+                <% if(product.originalPrice) { %>
+                  <span class="old-price">₹<%= product.originalPrice.toLocaleString() %></span>
+                <% } %>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+        </a>
+      <% }) %>
+
+      <!-- Rolex Collection -->
+      <% rolex.forEach(product => { %>
+        <a style="text-decoration: none;" href="/product/<%= product.id %>">
+        <div class="collection-card">
+          <% if(product.discount) { %>
+            <span class="collection-badge">-<%= product.discount %>%</span>
+          <% } %>
+          <div class="collection-img-container">
+            <img src="<%= product.images[0] %>" alt="<%= product.name %>" class="collection-img">
+          </div>
+          <div class="collection-body">
+          
+            <h3 class="collection-title"><%= product.name %></h3>
+            
+            <div class="collection-footer">
+              <div>
+                <span class="price">₹<%= product.price.toLocaleString() %></span>
+                <% if(product.originalPrice) { %>
+                  <span class="old-price">₹<%= product.originalPrice.toLocaleString() %></span>
+                <% } %>
+              </div>
+             
+            </div>
+          </div>
+        </div>
+        </a>
+      <% }) %>
+
+      <!-- Omega Collection -->
+      <% omega.forEach(product => { %>
+        <a style="text-decoration: none;" href="/product/<%= product.id %>">
+        <div class="collection-card">
+          <% if(product.discount) { %>
+            <span class="collection-badge">-<%= product.discount %>%</span>
+          <% } %>
+          <div class="collection-img-container">
+            <img src="<%= product.images[0] %>" alt="<%= product.name %>" class="collection-img">
+          </div>
+          <div class="collection-body">
+            
+            <h3 class="collection-title"><%= product.name %></h3>
+            
+            <div class="collection-footer">
+              <div>
+                <span class="price">₹<%= product.price.toLocaleString() %></span>
+                <% if(product.originalPrice) { %>
+                  <span class="old-price">₹<%= product.originalPrice.toLocaleString() %></span>
+                <% } %>
+              </div>
+             
+            </div>
+          </div>
+        </div>
+        </a>
+      <% }) %>
+
+      <!-- Sonata Collection -->
+      <% sonata.forEach(product => { %>
+        <a style="text-decoration: none;" href="/product/<%= product.id %>">
+        <div class="collection-card">
+          <% if(product.discount) { %>
+            <span class="collection-badge">-<%= product.discount %>%</span>
+          <% } %>
+          <div class="collection-img-container">
+            <img src="<%= product.images[0] %>" alt="<%= product.name %>" class="collection-img">
+          </div>
+          <div class="collection-body">
+            
+            <h3 class="collection-title"><%= product.name %></h3>
+           
+            <div class="collection-footer">
+              <div>
+                <span class="price">₹<%= product.price.toLocaleString() %></span>
+                <% if(product.originalPrice) { %>
+                  <span class="old-price">₹<%= product.originalPrice.toLocaleString() %></span>
+                <% } %>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+        </a>
+      <% }) %>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <a href="#" class="page-link"><i class="fas fa-chevron-left"></i></a>
+      <a href="#" class="page-link active">1</a>
+      <a href="#" class="page-link">2</a>
+      <a href="#" class="page-link">3</a>
+      <a href="#" class="page-link">4</a>
+      <a href="#" class="page-link">5</a>
+      <a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    let darkMode = true;
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'light') {
+      setLightMode();
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (darkMode) {
+        setLightMode();
+      } else {
+        setDarkMode();
+      }
+    });
+
+    function setLightMode() {
+      body.setAttribute('data-theme', 'light');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      darkMode = false;
+      localStorage.setItem('theme', 'light');
+    }
+
+    function setDarkMode() {
+      body.removeAttribute('data-theme');
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      darkMode = true;
+      localStorage.setItem('theme', 'dark');
+    }
+
+    // View toggle functionality
+    const viewBtns = document.querySelectorAll('.view-btn');
+    const collectionsGrid = document.getElementById('collectionsGrid');
+
+    viewBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        viewBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        if (btn.querySelector('.fa-list')) {
+          collectionsGrid.style.gridTemplateColumns = '1fr';
+        } else {
+          collectionsGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+        }
+      });
+    });
+
+    // Card animations
+    const cards = document.querySelectorAll('.collection-card');
+    cards.forEach((card, index) => {
+      gsap.to(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        },
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: index * 0.1
+      });
+      
+      setTimeout(() => {
+        card.classList.add('animated');
+      }, 500 + (index * 100));
+      
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+          y: -10,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          y: 0,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+    });
+
+    // Initialize GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+  </script>
+</body>
+</html>

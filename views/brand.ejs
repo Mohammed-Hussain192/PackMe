@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pack-Me| Our Brands</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --nav-bg: rgba(255, 255, 255, 0.9);
+            --card-bg: #fff;
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary-color: #3498db;
+            --secondary-color: #f1c40f;
+            --text-color: #ecf0f1;
+            --bg-color: #121212;
+            --nav-bg: rgba(30, 30, 30, 0.9);
+            --card-bg: #1e1e1e;
+        }
+
+       
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-login {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-login:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-register {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-register:hover {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            color: var(--secondary-color);
+            transform: rotate(30deg);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Brands Section */
+        .brands-hero {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 5rem 5% 0;
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .brands-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .brands-hero h1 span {
+            color: var(--secondary-color);
+        }
+
+        .brands-hero p {
+            max-width: 700px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .brands-container {
+            padding: 5rem 5%;
+            background-color: var(--bg-color);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .section-title span {
+            color: var(--secondary-color);
+        }
+
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .brand-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 1.5rem;
+            filter: grayscale(100%);
+            transition: var(--transition);
+        }
+
+        .brand-card:hover .brand-logo {
+            filter: grayscale(0%);
+        }
+
+        .brand-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .brand-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .brand-link {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .brand-link:hover {
+            color: var(--primary-color);
+            gap: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background-color: var(--card-bg);
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .copyright {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background-color: var(--nav-bg);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                transition: var(--transition);
+                backdrop-filter: blur(10px);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .brands-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .brands-hero h1 {
+                font-size: 2rem;
+            }
+
+            .auth-buttons {
+                display: none;
+            }
+
+            .mobile-auth {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">
+            <i class="fas fa-bag-shopping"></i>
+            <span>Pack-Me</span>
+        </a>
+        
+        <div class="nav-links">
+            <a href="/home">Home</a>
+            <a href="/collections">Collections</a>
+            <a href="/brands">Brands</a>
+            <a href="/cart">Cart</a>
+            <a href="/profile">Profile</a>
+        </div>
+        
+        <div class="auth-buttons">
+            
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        
+        <div class="hamburger" id="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Brands Hero Section -->
+    <section class="brands-hero" id="home">
+        <h1>Our <span>Prestigious</span> Brands</h1>
+        <p>Discover the finest bag brands curated by Chronovault. Each brand represents a unique heritage of craftsmanship, innovation, and timeless elegance.</p>
+    </section>
+
+    <!-- Brands Showcase -->
+    <section class="brands-container" id="brands">
+        <h2 class="section-title">Featured <span>Brands</span></h2>
+        
+        <div class="brands-grid">
+            <!-- Titan1 Brand -->
+            <div class="brand-card">
+                <img src="data:image/png;base64,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" alt="Titan1 Logo" class="brand-logo">
+                <h3 class="brand-name">PUMA</h3>
+                <p class="brand-description">A symbol of precision and reliability,PUMA bags combine cutting-edge technology with elegant design for the modern individual.</p>
+                <a href="/collections" class="brand-link">
+                    Explore PUMA
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <!-- Rolex1 Brand -->
+            <div class="brand-card">
+                <img src="data:image/png;base64,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" alt="Rolex1 Logo" class="brand-logo">
+                <h3 class="brand-name">American Tourister</h3>
+                <p class="brand-description">Synonymous with luxury and prestige,American Tourister represents the pinnacle of Swiss watchmaking excellence and timeless sophistication.</p>
+                <a href="/collections" class="brand-link">
+                    Explore American Tourister
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <!-- Sonata1 Brand -->
+            <div class="brand-card">
+                <img src="data:image/jpeg;base64,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" alt="Sonata1 Logo" class="brand-logo">
+                <h3 class="brand-name">Safari</h3>
+                <p class="brand-description">Innovative and affordable, Safari brings quality timekeeping to everyone without compromising on style or functionality.</p>
+                <a href="/collections" class="brand-link">
+                    Explore Safari
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <!-- Omega1 Brand -->
+            <div class="brand-card">
+                <img src="data:image/png;base64,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" alt="Omega1 Logo" class="brand-logo">
+                <h3 class="brand-name">GEAR</h3>
+                <p class="brand-description">With a legacy of precision and adventure, Gear bags have been the choice of explorers, astronauts, and style icons alike.</p>
+                <a href="/collections" class="brand-link">
+                    Explore GEAR
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <!-- Fastrack1 Brand -->
+            <div class="brand-card">
+                <img src="data:image/png;base64,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" alt="Fastrack1 Logo" class="brand-logo">
+                <h3 class="brand-name">Wildcraft</h3>
+                <p class="brand-description">Bold, youthful, and dynamic, wildcraft are designed for those who live life at full speed with unapologetic style.</p>
+                <a href="/collections" class="brand-link">
+                    Explore Wildcraft
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <a href="#" class="footer-logo">Pack-Me</a>
+        <div class="footer-links">
+            <a href="#">About Us</a>
+            <a href="#">Brands</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+        <p class="copyright">© 2023 Chronovault. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+
+        // Check for saved theme preference
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            body.classList.add(currentTheme);
+            if (currentTheme === 'dark-mode') {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark-mode');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', '');
+            }
+        });
+
+        // Mobile Navigation
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // GSAP animations for brand cards
+        gsap.registerPlugin(ScrollTrigger);
+        
+        gsap.utils.toArray(".brand-card").forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                delay: i * 0.1
+            });
+        });
+    </script>
+</body>
+</html>

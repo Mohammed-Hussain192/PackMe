@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order | Pack-Me</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <style>
+    :root {
+      --primary: #1a1a2e;
+      --secondary: #16213e;
+      --accent: #0f3460;
+      --highlight: #e94560;
+      --text: #f1f1f1;
+      --text-secondary: #b8b8b8;
+      --card-bg: #16213e;
+      --nav-bg: rgba(26, 26, 46, 0.9);
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --border: rgba(233, 69, 96, 0.2);
+    }
+
+    [data-theme="light"] {
+      --primary: #f8f9fa;
+      --secondary: #e9ecef;
+      --accent: #dee2e6;
+      --highlight: #e94560;
+      --text: #212529;
+      --text-secondary: #495057;
+      --card-bg: #ffffff;
+      --nav-bg: rgba(248, 249, 250, 0.9);
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --border: rgba(233, 69, 96, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--primary);
+      color: var(--text);
+      transition: var(--transition);
+      min-height: 100vh;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--highlight);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--highlight);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      color: var(--highlight);
+      transform: rotate(30deg);
+    }
+
+    /* Container & Tracking Page Styles */
+    .container {
+      max-width: 800px;
+      margin: 7rem auto 3rem;
+      padding: 2rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background-color: var(--highlight);
+    }
+
+    .tracking-card {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--highlight);
+      margin-bottom: 2rem;
+    }
+
+    .order-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-item {
+      margin-bottom: 1rem;
+    }
+
+    .info-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    .info-value {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-processing {
+      background-color: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+
+    .status-shipped {
+      background-color: rgba(23, 162, 184, 0.2);
+      color: #17a2b8;
+    }
+
+    .status-out-for-delivery {
+      background-color: rgba(111, 66, 193, 0.2);
+      color: #6f42c1;
+    }
+
+    .status-delivered {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+    }
+
+    .product-section {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background-color: var(--secondary);
+      border-radius: 10px;
+    }
+
+    .product-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+    }
+
+    .product-details h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-price {
+      color: var(--highlight);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background-color: var(--highlight);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--highlight);
+      text-decoration: none;
+      margin-top: 1rem;
+      transition: var(--transition);
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Enhanced Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin-top: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 7px;
+      height: 100%;
+      width: 2px;
+      background-color: var(--highlight);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 2rem;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: var(--highlight);
+      border: 3px solid var(--card-bg);
+    }
+
+    .timeline-content {
+      margin-left: 2rem;
+      padding: 1rem;
+      background-color: var(--secondary);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .timeline-date {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .timeline-date i {
+      color: var(--highlight);
+    }
+
+    .timeline-title {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .timeline-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: var(--highlight);
+      color: white;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      height: 8px;
+      background-color: var(--secondary);
+      border-radius: 4px;
+      margin: 2rem 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: var(--highlight);
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .container {
+        padding: 6rem 1.5rem 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .product-section {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .order-info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/home" class="logo">
+      <i class="fas fa-bag-shopping"></i>
+      <span>Pack-Me</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="/home">Home</a>
+      <a href="/collections">Collections</a>
+      <a href="/myorders">My Orders</a>
+      <a href="/profile">Profile</a>
+      <a href="/cart">Cart</a>
+    </div>
+    
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2 class="section-title">Order Tracking</h2>
+    
+    <div class="tracking-card">
+      <div class="order-info">
+        <div class="info-item">
+          <span class="info-label">Order ID</span>
+          <span class="info-value">CV<%= Order.id %></span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Customer</span>
+          <span class="info-value"><%= Order.customerName || Order.email %></span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Status</span>
+          <span class="info-value">
+            <% if (Order.status === 'Shipped') { %>
+              <span class="status-badge status-shipped">
+                <i class="fas fa-shipping-fast"></i> Shipped
+              </span>
+            <% } else if (Order.status === 'Out for Delivery') { %>
+              <span class="status-badge status-out-for-delivery">
+                <i class="fas fa-truck"></i> Out for Delivery
+              </span>
+            <% } else if (Order.status === 'Delivered') { %>
+              <span class="status-badge status-delivered">
+                <i class="fas fa-check-circle"></i> Delivered
+              </span>
+            <% } else { %>
+              <span class="status-badge status-processing">
+                <i class="fas fa-spinner"></i> Processing
+              </span>
+            <% } %>
+          </span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Order Date</span>
+          <span class="info-value"><%= Order.orderDate %></span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Phone</span>
+          <span class="info-value"><%= Order.phone %></span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">PIN Code</span>
+          <span class="info-value"><%= Order.pin %></span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Delivery Status</span>
+          <span class="info-value"><%= Order.Deliverable %></span>
+        </div>
+      </div>
+      
+      <div class="product-section">
+        <img src="<%= productdet.images[0] || '/placeholder-product.jpg' %>" alt="<%= Order.productname %>" class="product-image">
+        <div class="product-details">
+          <h3><%= Order.productname %></h3>
+          <div class="product-price">₹<%= Order.price %></div>
+          <p><%= productdet.description || 'Premium timepiece from ChronoVault collection' %></p>
+        </div>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Shipping Address</span>
+        <span class="info-value"><%= Order.address %></span>
+      </div>
+      
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <% if (Order.status === 'Shipped') { %>
+          <div class="progress-bar" style="width: 33%"></div>
+        <% } else if (Order.status === 'Out for Delivery') { %>
+          <div class="progress-bar" style="width: 66%"></div>
+        <% } else if (Order.status === 'Delivered') { %>
+          <div class="progress-bar" style="width: 100%"></div>
+        <% } else { %>
+          <div class="progress-bar" style="width: 0%"></div>
+        <% } %>
+      </div>
+      
+      <h3 style="margin-bottom: 1rem;">Order Journey</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">
+              <i class="far fa-calendar-alt"></i> <%= Order.orderDate %>
+            </div>
+            <h4 class="timeline-title">
+              <span class="timeline-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </span>
+              Order Placed
+            </h4>
+            <p class="timeline-desc">We've received your order and are preparing it for shipment.</p>
+          </div>
+        </div>
+        
+        <% if (Order.status === 'Shipped' || Order.status === 'Out for Delivery' || Order.status === 'Delivered') { %>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">
+              <i class="far fa-calendar-alt"></i> <%= Order.shipDate || 'Processing' %>
+            </div>
+            <h4 class="timeline-title">
+              <span class="timeline-icon">
+                <i class="fas fa-shipping-fast"></i>
+              </span>
+              Order Shipped
+            </h4>
+            <p class="timeline-desc">Your order has left our warehouse and is on its way to you.</p>
+            <% if (Order.trackingNumber) { %>
+              <p class="timeline-desc" style="margin-top: 0.5rem;">
+                <strong>Tracking #:</strong> <%= Order.trackingNumber %>
+              </p>
+            <% } %>
+          </div>
+        </div>
+        <% } %>
+        
+        <% if (Order.status === 'Out for Delivery' || Order.status === 'Delivered') { %>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">
+              <i class="far fa-calendar-alt"></i> <%= Order.outForDeliveryDate || 'In transit' %>
+            </div>
+            <h4 class="timeline-title">
+              <span class="timeline-icon">
+                <i class="fas fa-truck"></i>
+              </span>
+              Out for Delivery
+            </h4>
+            <p class="timeline-desc">Your order is with the delivery courier and will arrive soon.</p>
+            <% if (Order.estimatedDelivery) { %>
+              <p class="timeline-desc" style="margin-top: 0.5rem;">
+                <strong>Estimated Delivery:</strong> <%= Order.estimatedDelivery %>
+              </p>
+            <% } %>
+          </div>
+        </div>
+        <% } %>
+        
+        <% if (Order.status === 'Delivered') { %>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">
+              <i class="far fa-calendar-alt"></i> <%= Order.deliveryDate %>
+            </div>
+            <h4 class="timeline-title">
+              <span class="timeline-icon">
+                <i class="fas fa-check-circle"></i>
+              </span>
+              Order Delivered
+            </h4>
+            <p class="timeline-desc">Your order has been successfully delivered.</p>
+            <% if (Order.deliveryNotes) { %>
+              <p class="timeline-desc" style="margin-top: 0.5rem;">
+                <strong>Delivery Notes:</strong> <%= Order.deliveryNotes %>
+              </p>
+            <% } %>
+          </div>
+        </div>
+        <% } %>
+      </div>
+      
+      <a href="/myorders" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to My Orders
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    let darkMode = true;
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'light') {
+      setLightMode();
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (darkMode) {
+        setLightMode();
+      } else {
+        setDarkMode();
+      }
+    });
+
+    function setLightMode() {
+      body.setAttribute('data-theme', 'light');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      darkMode = false;
+      localStorage.setItem('theme', 'light');
+    }
+
+    function setDarkMode() {
+      body.removeAttribute('data-theme');
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      darkMode = true;
+      localStorage.setItem('theme', 'dark');
+    }
+
+    // Animation for tracking card
+    gsap.from(".tracking-card", {
+      scrollTrigger: {
+        trigger: ".tracking-card",
+        start: "top 80%",
+        toggleActions: "play none none none"
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: "back.out(1)"
+    });
+
+    // Animation for timeline items
+    gsap.from(".timeline-item", {
+      scrollTrigger: {
+        trigger: ".timeline",
+        start: "top 80%",
+        toggleActions: "play none none none"
+      },
+      x: -30,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.2,
+      ease: "power2.out"
+    });
+
+    // Animate progress bar
+    gsap.from(".progress-bar", {
+      scrollTrigger: {
+        trigger: ".progress-container",
+        start: "top 80%",
+        toggleActions: "play none none none"
+      },
+      width: "0%",
+      duration: 1.5,
+      ease: "power2.out"
+    });
+  </script>
+</body>
+</html>

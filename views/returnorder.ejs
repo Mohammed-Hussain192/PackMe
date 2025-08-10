@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders | Pack-Me</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <style>
+    :root {
+      --primary: #1a1a2e;
+      --secondary: #16213e;
+      --accent: #0f3460;
+      --highlight: #e94560;
+      --text: #f1f1f1;
+      --text-secondary: #b8b8b8;
+      --card-bg: #16213e;
+      --nav-bg: rgba(26, 26, 46, 0.9);
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --border: rgba(233, 69, 96, 0.2);
+    }
+
+    [data-theme="light"] {
+      --primary: #f8f9fa;
+      --secondary: #e9ecef;
+      --accent: #dee2e6;
+      --highlight: #e94560;
+      --text: #212529;
+      --text-secondary: #495057;
+      --card-bg: #ffffff;
+      --nav-bg: rgba(248, 249, 250, 0.9);
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --border: rgba(233, 69, 96, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--primary);
+      color: var(--text);
+      transition: var(--transition);
+      min-height: 100vh;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--highlight);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--highlight);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      color: var(--highlight);
+      transform: rotate(30deg);
+    }
+
+    .cart-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .cart-btn:hover {
+      color: var(--highlight);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--highlight);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Container & Orders Page Styles */
+    .container {
+      max-width: 1000px;
+      margin: 7rem auto 3rem;
+      padding: 2rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background-color: var(--highlight);
+    }
+
+    .orders-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .order-card {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border-left: 4px solid var(--highlight);
+    }
+
+    .order-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(233, 69, 96, 0.2);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--accent);
+    }
+
+    .order-id {
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .order-id strong {
+      color: var(--highlight);
+      font-weight: 600;
+    }
+
+    .order-date {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .order-date i {
+      font-size: 0.9rem;
+    }
+
+    .order-status {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-pending {
+      background-color: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+
+    .status-completed {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+    }
+
+    .status-shipped {
+      background-color: rgba(23, 162, 184, 0.2);
+      color: #17a2b8;
+    }
+
+    .order-body {
+      padding: 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .product-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .product-name {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .product-price {
+      font-size: 1.1rem;
+      color: var(--highlight);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-quantity {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .order-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--accent);
+    }
+
+    .order-total {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .order-total span {
+      color: var(--highlight);
+    }
+
+    .order-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background-color: var(--highlight);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--highlight);
+      color: var(--highlight);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--highlight);
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+    }
+
+    .btn i {
+      font-size: 0.8rem;
+    }
+
+    .no-orders {
+      text-align: center;
+      padding: 3rem;
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      border: 2px dashed var(--accent);
+    }
+
+    .no-orders-icon {
+      font-size: 3rem;
+      color: var(--highlight);
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .no-orders-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .no-orders-text {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .explore-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal-container {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      padding: 2rem;
+    }
+    
+    .modal-overlay.active .modal-container {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--accent);
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      color: var(--highlight);
+    }
+    
+    .close-modal {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .close-modal:hover {
+      color: var(--highlight);
+    }
+    
+    .product-info-modal {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--accent);
+    }
+    
+    .product-image-modal {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+    }
+    
+    .product-details-modal {
+      flex: 1;
+    }
+    
+    .product-name-modal {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .product-price-modal {
+      font-size: 1.1rem;
+      color: var(--highlight);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: var(--secondary);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      transition: var(--transition);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--highlight);
+      box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.2);
+    }
+    
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .radio-option input {
+      accent-color: var(--highlight);
+    }
+    
+    .checkbox-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .checkbox-option input {
+      margin-top: 0.25rem;
+    }
+    
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .btn-secondary {
+      background-color: var(--accent);
+      color: var(--text);
+    }
+    
+    .btn-secondary:hover {
+      background-color: var(--secondary);
+    }
+    
+    /* Return-specific styles */
+    .return-conditions {
+      background-color: rgba(255, 193, 7, 0.1);
+      border-left: 4px solid #ffc107;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .return-conditions-title {
+      color: #ffc107;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .container {
+        padding: 6rem 1.5rem 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .order-body {
+        flex-direction: column;
+      }
+      
+      .product-image {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+      }
+      
+      .order-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      
+      .order-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      /* Modal responsive adjustments */
+      .product-info-modal {
+        flex-direction: column;
+      }
+      
+      .product-image-modal {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+      }
+      
+      .modal-actions {
+        flex-direction: column;
+      }
+      
+      .modal-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/home" class="logo">
+      <i class="fas fa-bag-shopping"></i>
+      <span>Pack-Me</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="/home">Home</a>
+      <a href="/collections">Collections</a>
+      <a href="/myorders">My Orders</a>
+      <a href="/profile">Profile</a>
+      <a href="/cart">Cart</a>
+    </div>
+    
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2 class="section-title">Return Product</h2>
+    
+    <% if (orders.length === 0) { %>
+      <div class="no-orders">
+        <div class="no-orders-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3 class="no-orders-title">No orders in your vault yet</h3>
+        <p class="no-orders-text">Explore our collection of timeless pieces</p>
+        <a href="/collections" class="btn explore-btn">
+          <i class="fas fa-compass"></i> Browse Collections
+        </a>
+      </div>
+    <% } else { %>
+      <div class="orders-list">
+        <% orders.forEach(order => { %>
+          <div class="order-card">
+            <div class="order-header">
+              <div class="order-id">Order #<strong>CV<%= order.id %></strong></div>
+              <div class="order-date">
+                <i class="far fa-calendar-alt"></i>
+                <!-- If you have order date info -->
+              </div>
+            </div>
+
+            <div class="order-body">
+              <img src="<%= order.images %>" alt="<%= order.name %>" class="product-image">
+              <div class="product-info">
+                <h4 class="product-name"><%= order.name %></h4>
+                <div class="product-price">₹<%= order.price %></div>
+                <div class="product-price"><span style="color: black;">Status</span> : <%= order.status %></div>
+              </div>
+            </div>
+
+            <div class="order-footer">
+              <div class="order-actions">
+                <a href="/product/<%= order.id %>" class="btn btn-outline">
+                  <i class="fas fa-info-circle"></i> Details
+                </a>
+                <% if (order.status.toLowerCase() === 'delivered') { %>
+                  <button class="btn btn-outline open-return-modal" 
+                          style="background-color: #ffc107; color: #000;"
+                          data-order-id="<%= order.id %>"
+                          data-product-name="<%= order.name %>"
+                          data-product-image="<%= order.images %>"
+                          data-product-price="<%= order.price %>">
+                    <i class="fas fa-undo"></i> Return
+                  </button>
+                <% } else { %>
+                  <button class="btn btn-outline open-cancel-modal" 
+                          style="background-color: #dc3545; color: #fff;"
+                          data-order-id="<%= order.id %>"
+                          data-product-name="<%= order.name %>"
+                          data-product-image="<%= order.images %>"
+                          data-product-price="<%= order.price %>">
+                    <i class="fas fa-times-circle"></i> Cancel
+                  </button>
+                <% } %>
+                <a href="/track/<%= order.id %>" class="btn">
+                  <i class="fas fa-truck"></i> Track Order
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Cancel Order Modal -->
+  <div class="modal-overlay" id="cancelModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Cancel Order</h3>
+        <button class="close-modal" id="closeCancelModal">&times;</button>
+      </div>
+      
+      <div class="product-info-modal">
+        <img src="" alt="Product Image" class="product-image-modal" id="cancelModalProductImage">
+        <div class="product-details-modal">
+          <h4 class="product-name-modal" id="cancelModalProductName"></h4>
+          <div class="product-price-modal" id="cancelModalProductPrice"></div>
+          <div class="product-quantity">Order ID: <span id="cancelModalOrderId"></span></div>
+        </div>
+      </div>
+      
+      <form id="cancelForm">
+        <div class="form-group">
+          <label class="form-label">Reason for cancellation</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="cancelReason" value="changed-mind" required>
+              Changed my mind
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="cancelReason" value="found-cheaper">
+              Found a better price elsewhere
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="cancelReason" value="shipping-delay">
+              Shipping takes too long
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="cancelReason" value="other">
+              Other reason
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group" id="cancelOtherReasonGroup" style="display: none;">
+          <label for="cancelOtherReason" class="form-label">Please specify</label>
+          <textarea class="form-control" id="cancelOtherReason" name="otherReason"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="cancelAdditionalNotes" class="form-label">Additional notes (optional)</label>
+          <textarea class="form-control" id="cancelAdditionalNotes" name="additionalNotes"></textarea>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelCancelBtn">Go Back</button>
+          <button type="submit" class="btn" style="background-color: #dc3545;">Confirm Cancellation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Return Order Modal -->
+  <div class="modal-overlay" id="returnModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Return Order</h3>
+        <button class="close-modal" id="closeReturnModal">&times;</button>
+      </div>
+      
+      <div class="product-info-modal">
+        <img src="" alt="Product Image" class="product-image-modal" id="returnModalProductImage">
+        <div class="product-details-modal">
+          <h4 class="product-name-modal" id="returnModalProductName"></h4>
+          <div class="product-price-modal" id="returnModalProductPrice"></div>
+          <div class="product-quantity">Order ID: <span id="returnModalOrderId"></span></div>
+        </div>
+      </div>
+      
+      <div class="return-conditions">
+        <h4 class="return-conditions-title">
+          <i class="fas fa-exclamation-circle"></i> Return Conditions
+        </h4>
+        <ul style="padding-left: 1.5rem; font-size: 0.9rem;">
+          <li>Item must be unused and in original condition</li>
+          <li>Original packaging must be intact</li>
+          <li>Return must be initiated within 7 days of delivery</li>
+        </ul>
+      </div>
+      <% orders.forEach(order => { %>
+      <form id="returnForm" action="/return/data/<%= order.id %>" method="get">
+        <div class="form-group">
+          <label class="form-label">Reason for return</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="returnReason" value="wrong-item" required>
+              Wrong item received
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="returnReason" value="defective">
+              Product is defective/damaged
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="returnReason" value="not-as-described">
+              Product not as described
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="returnReason" value="other">
+              Other reason
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group" id="returnOtherReasonGroup" style="display: none;">
+          <label for="returnOtherReason" class="form-label">Please specify</label>
+          <textarea class="form-control" id="returnOtherReason" name="otherReason"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Return method</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="returnMethod" value="pickup" required>
+              Schedule pickup (free)
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="returnMethod" value="drop-off">
+              Drop off at nearest center
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="returnAdditionalNotes" class="form-label">Additional details (optional)</label>
+          <textarea class="form-control" id="returnAdditionalNotes" name="additionalNotes" placeholder="Please provide any additional information about your return..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox-option">
+            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+            <label for="agreeTerms">I confirm that the item is unused and in its original condition with all tags attached</label>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelReturnBtn">Go Back</button>
+          <button type="submit" class="btn" style="background-color: #ffc107; color: #000;">Submit Return Request</button>
+        </div>
+      </form>
+      <% }) %>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    let darkMode = true;
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'light') {
+      setLightMode();
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (darkMode) {
+        setLightMode();
+      } else {
+        setDarkMode();
+      }
+    });
+
+    function setLightMode() {
+      body.setAttribute('data-theme', 'light');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      darkMode = false;
+      localStorage.setItem('theme', 'light');
+    }
+
+    function setDarkMode() {
+      body.removeAttribute('data-theme');
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      darkMode = true;
+      localStorage.setItem('theme', 'dark');
+    }
+
+    // Animation for order cards
+    document.querySelectorAll('.order-card').forEach((card, index) => {
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: "top 80%",
+          toggleActions: "play none none none"
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.6,
+        delay: index * 0.1,
+        ease: "back.out(1)"
+      });
+    });
+
+    // Animation for no orders section
+    gsap.from(".no-orders", {
+      scrollTrigger: {
+        trigger: ".no-orders",
+        start: "top 80%",
+        toggleActions: "play none none none"
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: "back.out(1)"
+    });
+
+    // Hover effect for order cards
+    document.querySelectorAll('.order-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+          y: -5,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          y: 0,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+    });
+
+    // Cancel Order Modal Functionality
+    const cancelModal = document.getElementById('cancelModal');
+    const closeCancelModalBtn = document.getElementById('closeCancelModal');
+    const cancelCancelBtn = document.getElementById('cancelCancelBtn');
+    const openCancelModalBtns = document.querySelectorAll('.open-cancel-modal');
+    const cancelForm = document.getElementById('cancelForm');
+    const cancelOtherReasonGroup = document.getElementById('cancelOtherReasonGroup');
+    const cancelOtherReasonRadio = document.querySelector('#cancelForm input[value="other"]');
+    
+    // Open cancel modal with product details
+    openCancelModalBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const orderId = btn.dataset.orderId;
+        const productName = btn.dataset.productName;
+        const productImage = btn.dataset.productImage;
+        const productPrice = btn.dataset.productPrice;
+        
+        document.getElementById('cancelModalOrderId').textContent = 'CV' + orderId;
+        document.getElementById('cancelModalProductName').textContent = productName;
+        document.getElementById('cancelModalProductImage').src = productImage;
+        document.getElementById('cancelModalProductPrice').textContent = '₹' + productPrice;
+        
+        // Reset form
+        cancelForm.reset();
+        cancelOtherReasonGroup.style.display = 'none';
+        
+        // Show modal with animation
+        cancelModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    
+    // Close cancel modal
+    function closeCancelModal() {
+      cancelModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    closeCancelModalBtn.addEventListener('click', closeCancelModal);
+    cancelCancelBtn.addEventListener('click', closeCancelModal);
+    
+    // Close when clicking outside modal
+    cancelModal.addEventListener('click', (e) => {
+      if (e.target === cancelModal) {
+        closeCancelModal();
+      }
+    });
+    
+    // Show/hide other reason textarea in cancel form
+    cancelOtherReasonRadio.addEventListener('change', () => {
+      cancelOtherReasonGroup.style.display = cancelOtherReasonRadio.checked ? 'block' : 'none';
+    });
+    
+    // Cancel form submission
+    
+
+    // Return Order Modal Functionality
+    const returnModal = document.getElementById('returnModal');
+    const closeReturnModalBtn = document.getElementById('closeReturnModal');
+    const cancelReturnBtn = document.getElementById('cancelReturnBtn');
+    const openReturnModalBtns = document.querySelectorAll('.open-return-modal');
+    const returnForm = document.getElementById('returnForm');
+    const returnOtherReasonGroup = document.getElementById('returnOtherReasonGroup');
+    const returnOtherReasonRadio = document.querySelector('#returnForm input[value="other"]');
+    
+    // Open return modal with product details
+    openReturnModalBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const orderId = btn.dataset.orderId;
+        const productName = btn.dataset.productName;
+        const productImage = btn.dataset.productImage;
+        const productPrice = btn.dataset.productPrice;
+        
+        document.getElementById('returnModalOrderId').textContent = 'CV' + orderId;
+        document.getElementById('returnModalProductName').textContent = productName;
+        document.getElementById('returnModalProductImage').src = productImage;
+        document.getElementById('returnModalProductPrice').textContent = '₹' + productPrice;
+        
+        // Reset form
+        returnForm.reset();
+        returnOtherReasonGroup.style.display = 'none';
+        
+        // Show modal with animation
+        returnModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    
+    // Close return modal
+    function closeReturnModal() {
+      returnModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    closeReturnModalBtn.addEventListener('click', closeReturnModal);
+    cancelReturnBtn.addEventListener('click', closeReturnModal);
+    
+    // Close when clicking outside modal
+    returnModal.addEventListener('click', (e) => {
+      if (e.target === returnModal) {
+        closeReturnModal();
+      }
+    });
+    
+    // Show/hide other reason textarea in return form
+    returnOtherReasonRadio.addEventListener('change', () => {
+      returnOtherReasonGroup.style.display = returnOtherReasonRadio.checked ? 'block' : 'none';
+    });
+    
+    // Return form submission
+   
+
+    // Animation for modals
+    gsap.from(".modal-container", {
+      duration: 0.3,
+      opacity: 0,
+      y: 20,
+      ease: "back.out(1)"
+    });
+  </script>
+</body>
+</html>
