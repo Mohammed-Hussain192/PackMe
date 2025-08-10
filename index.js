@@ -684,6 +684,8 @@ app.get('/track/:id',loginmiddelware, async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, '0.0.0.0', () => console.log(`Server running`));
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
+
 
